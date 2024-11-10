@@ -15,17 +15,20 @@ var ErrSingularMatrix = errors.New("singular matrix")
 type MathFunc func(x ...float64) float64
 
 func D(f MathFunc, h float64, varIndexes ...int) MathFunc {
-	for _, v := range varIndexes {
-		c := f
-		f = func(x ...float64) float64 {
+	diff := func(f MathFunc, h float64, v int) MathFunc {
+		return func(x ...float64) float64 {
 			lx := slices.Clone(x)
 			rx := slices.Clone(x)
 
-			lx[v] += h
-			rx[v] -= h
+			lx[v] -= h
+			rx[v] += h
 
-			return (c(lx...) - c(rx...)) / (2 * h)
+			return (f(rx...) - f(lx...)) / (2 * h)
 		}
+	}
+
+	for _, v := range varIndexes {
+		f = diff(f, h, v)
 	}
 
 	return f
