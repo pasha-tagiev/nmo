@@ -3,24 +3,24 @@ package main
 import (
 	"fmt"
 	"math"
-	"nmo/lab2/matrix"
-	"nmo/lab2/util"
-	"nmo/lab2/vector"
+	"nmo/extmath"
+	"nmo/extmath/matrix"
+	"nmo/extmath/vector"
 	"slices"
 )
 
-func Newton(f util.MathFunc, x0 vector.Vector, h float64, maxIteration int) (_ vector.Vector, err error) {
+func Newton(f extmath.MathFunc, x0 vector.Vector, h float64, maxIteration int) (_ vector.Vector, err error) {
 	xn := slices.Clone(x0)
 
 	dim := len(x0)
-	grad := util.Grad(f, dim, h)
-	H := util.Hessian(f, dim, h)
+	grad := extmath.Grad(f, dim, h)
+	H := extmath.Hessian(f, dim, h)
 
 	for range maxIteration {
 		vectorGrad := grad(xn...)
 
 		var HInv matrix.Matrix
-		if HInv, err = util.Inverse(H(xn...)); err != nil {
+		if HInv, err = matrix.Inverse(H(xn...)); err != nil {
 			return
 		}
 
@@ -34,7 +34,7 @@ func Newton(f util.MathFunc, x0 vector.Vector, h float64, maxIteration int) (_ v
 	return xn, nil
 }
 
-func PrintAnswer(label string, f util.MathFunc, x0 ...float64) {
+func PrintAnswer(label string, f extmath.MathFunc, x0 ...float64) {
 	answer, err := Newton(f, x0, 1e-2, 100)
 	if err != nil {
 		fmt.Println(label, "вырожденная матрица Гессе")

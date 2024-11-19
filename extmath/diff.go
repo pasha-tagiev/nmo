@@ -1,16 +1,10 @@
-package util
+package extmath
 
 import (
-	"errors"
-	"math"
-	"nmo/lab2/matrix"
-	"nmo/lab2/vector"
+	"nmo/extmath/matrix"
+	"nmo/extmath/vector"
 	"slices"
 )
-
-var epsilon = math.Nextafter(1, 2) - 1
-
-var ErrSingularMatrix = errors.New("singular matrix")
 
 type MathFunc func(x ...float64) float64
 
@@ -84,36 +78,4 @@ func Hessian(f MathFunc, dim int, h float64) HessianFunc {
 
 		return res
 	}
-}
-
-func Inverse(mx matrix.Matrix) (matrix.Matrix, error) {
-	augmented := matrix.Concat(mx, matrix.E(mx.M()))
-
-	for i := range augmented {
-		if math.Abs(augmented[i][i]) < epsilon {
-			return nil, ErrSingularMatrix
-		}
-
-		divisor := augmented[i][i]
-
-		for j := range 2 * mx.N() {
-			augmented[i][j] /= divisor
-		}
-
-		for k := range mx.M() {
-			if i != k {
-				factor := augmented[k][i]
-				for j := range 2 * mx.N() {
-					augmented[k][j] -= factor * augmented[i][j]
-				}
-			}
-		}
-	}
-
-	inverse := make(matrix.Matrix, mx.M())
-	for i := range inverse {
-		inverse[i] = augmented[i][mx.N():]
-	}
-
-	return inverse, nil
 }

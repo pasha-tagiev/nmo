@@ -1,7 +1,7 @@
 package matrix
 
 import (
-	"nmo/lab2/vector"
+	"nmo/extmath/vector"
 	"slices"
 )
 
