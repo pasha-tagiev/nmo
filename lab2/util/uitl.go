@@ -20,10 +20,10 @@ func D(f MathFunc, h float64, varIndexes ...int) MathFunc {
 			lx := slices.Clone(x)
 			rx := slices.Clone(x)
 
-			lx[v] -= h
-			rx[v] += h
+			lx[v] += h
+			rx[v] -= h
 
-			return (f(rx...) - f(lx...)) / (2 * h)
+			return (f(lx...) - f(rx...)) / (2 * h)
 		}
 	}
 
