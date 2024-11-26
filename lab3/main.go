@@ -51,7 +51,7 @@ func main() {
 
 	fmt.Printf("f1(%v) = %v\n", res, f1(res...))
 
-	// f2(x, y) = |x^2+y^2-4|
+	// f2(x, y) = x^2+y^2-4
 	f2 := func(x ...float64) float64 {
 		return math.Pow(x[0], 2) + math.Pow(x[1], 2) - 4
 	}
